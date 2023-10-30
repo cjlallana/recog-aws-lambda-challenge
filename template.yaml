@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    chatgpt-diagnosis-lambda
+
+    Smart medical assistant that communicates with ChatGPT to assist doctors
+    in diagnosing patients based on symptoms provided.
+
+Globals: # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html
+    Function:
+        Timeout: 5
+        MemorySize: 128
+        Runtime: python3.11
+
+Resources:
+    OpenAIDiagnosisFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
+        Properties:
+            Handler: app.lambda_handler
+            CodeUri: base
+            Description: Function that calls the OpenAI API for a smart medical diagnosis
+            Architectures:
+                - x86_64
+            Tracing: Active
+            Events:
+                DiagnosisPath:
+                    Type: Api # More info about API Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-api.html
+                    Properties:
+                        Path: /get_openai_diagnosis
+                        Method: GET
+             # Powertools for AWS Lambda (Python) env vars: https://awslabs.github.io/aws-lambda-powertools-python/#environment-variables
+            Environment:
+                Variables:
+                    POWERTOOLS_SERVICE_NAME: PowertoolsHelloWorld
+                    POWERTOOLS_METRICS_NAMESPACE: Powertools
+                    LOG_LEVEL: INFO
+            Tags:
+                LambdaPowertools: python
+
+Outputs:
+    DiagnosisApi:
+      Description: "API Gateway endpoint URL for Prod environment for OpenAI diagnosis Function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get_openai_diagnosis"
+
+    OpenAIDiagnosisFunction:
+      Description: "Hello World Lambda Function ARN"
+      Value: !GetAtt OpenAIDiagnosisFunction.Arn
+
