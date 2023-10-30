@@ -16,6 +16,16 @@ This project contains source code and supporting files for a serverless applicat
 The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
 
 
+## OpenAI integration
+
+In order to have a functional application, an OpenAI API key must be provided.
+
+You can generate API keys in the OpenAI web interface. See https://platform.openai.com/account/api-keys for details.\"
+
+After generating it, you can set your API key in code using **openai.api_key = API-KEY**, or you can set the environment variable **OPENAI_API_KEY=API-KEY**. If your API key is stored in a file, you can point the openai module at it with **openai.api_key_path = PATH**.
+
+For more information, refer to the [Authentication](https://platform.openai.com/docs/api-reference/authentication) section of the official docs.
+
 ### Deploy the application
 
 The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
